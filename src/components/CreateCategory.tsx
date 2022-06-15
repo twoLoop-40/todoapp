@@ -12,7 +12,8 @@ function CreateCategory () {
 	
 	const handleValid = ({ category }: CategoryForm) => {
 		setCategories((oldCateries) => {
-			const newCategory = { text: category, id: Date.now() }
+			const length = oldCateries.length
+			const newCategory = { text: category, id: length }
 			return [...oldCateries, newCategory]
 		})
 		setValue("category", "")
@@ -37,7 +38,7 @@ function CreateCategory () {
 				category.id !== selectedCategory.id)
 			return rest
 		})
-		setSelectedCategory(() => categories.length > 0 ? categories.filter(v => v)[0] : {id: Date.now(), text: ""})
+		setSelectedCategory(() => categories.length > 0 ? categories.filter(v => v)[0] : {id: 0, text: ""})
 						
 	}
 	

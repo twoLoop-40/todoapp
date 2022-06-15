@@ -17,7 +17,7 @@ function ToDo () {
 	const showSeletedToDos = (toDos: IToDo[]) => 
 		toDos.map((toDo) => ( 
 			<li key={toDo.id}>
-				{toDo.text} <button key={toDo.id}>버튼</button>
+				{toDo.text}
 			</li>
 		))
 	return (
