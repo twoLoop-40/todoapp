@@ -4,11 +4,12 @@ export interface InputForm {
 export interface IToDo {
 	text: string;
 	id: number;
-	category: Categories;
+	category: ICategory;
 } 
-
-export enum Categories {
-	"TO_DO" = "TO_DO",
-	"DOING" = "DOING",
-	"DONE" = "DONE" 
+export interface CategoryForm {
+	category: string;
+}
+export interface ICategory {
+	text: string;
+	id: number;
 }
