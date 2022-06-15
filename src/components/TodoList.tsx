@@ -21,15 +21,23 @@ function TodoList () {
 			return getStorageItems<T>(key).filter((oldItem: T) => 
 				!list.find((item) => item.id === oldItem.id)).concat(list)
 		}
-		const toDoList = makeFullList<IToDo>("toDos",toDos)
-		const oldCategories = toDoList.map((toDo) => toDo.category)
+		const toDoList = makeFullList<IToDo>("toDos",toDos) 
 		const categoryList = makeFullList<ICategory>("category", categories)
-		console.log('저장된 투두스', toDoList)
-		console.log('저장된 카테고리', oldCategories)
+		const updatedList = categoryList.concat(
+			toDoList.map((toDo) => toDo.category)
+				.filter((category) => {
+				return !categoryList.find((base) => base.id === category.id)
+			})
+		)
 		localStorage.setItem("toDos", JSON.stringify(toDoList))
-		localStorage.setItem("categories", JSON.stringify(categoryList))
+		localStorage.setItem("categories", JSON.stringify(updatedList))
+		console.log('저장된 투두스', toDoList)
+		console.log('저장된 카테고리', getStorageItems<ICategory>("categories"))
 	}, [toDos, categories])
-	
+	useEffect(() => {
+		setCategories(() => getStorageItems<ICategory>('categories'))
+	}, [])
+
 	const loadToDos = () => {
 		const toDos = getStorageItems<IToDo>("toDos")
 		const categories = getStorageItems<ICategory>("categories")
