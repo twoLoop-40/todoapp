@@ -4,8 +4,7 @@ import { toDoSelector } from "./atoms";
 
 function ToDo () {
 	//const setToDos = useSetRecoilState(toDoState)
-	const selectedToDos = useRecoilValue(toDoSelector)
-  // const onClick = (event: ReactMouseEvent) => {
+	// const onClick = (event: ReactMouseEvent) => {
 	// 	const { currentTarget: { name }} = event
 	// 	setToDos((oldToDos) => {
 	// 		const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id)
@@ -14,11 +13,13 @@ function ToDo () {
 	// 		return (newToDos = [...oldToDos], newToDos[targetIndex] = newToDo, newToDos)
 	// 	})
 	// }
-	const showSeletedToDos = (toDos: IToDo[]) => {
-		return toDos.map((toDo) => {
-			return <li key={toDo.id}>{toDo.text}</li>
-		})
-	}
+	const selectedToDos = useRecoilValue(toDoSelector)
+	const showSeletedToDos = (toDos: IToDo[]) => 
+		toDos.map((toDo) => ( 
+			<li key={toDo.id}>
+				{toDo.text} <button key={toDo.id}>버튼</button>
+			</li>
+		))
 	return (
 		<ul>{showSeletedToDos(selectedToDos)}</ul>
 	)

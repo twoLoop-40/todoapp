@@ -2,19 +2,19 @@ import { atom, selector } from "recoil";
 import { ICategory, IToDo } from "../types/dataTypes";
 
 const basicCategories: ICategory[] = [
-	{
-		id: 0,
-		text: "TO_DO"
-	},
-	{
-		id: 1,
-		text: "DOING"
-	},
-	{
-		id: 2,
-		text: "DONE"
-	}
-]	
+		{
+			id: 0,
+			text: "TO_DO"
+		},
+		{
+			id: 1,
+			text: "DOING"
+		},
+		{
+			id: 2,
+			text: "DONE"
+		}
+	]
 
 export const toDoState = atom<IToDo[]>({
 	key: "toDo",

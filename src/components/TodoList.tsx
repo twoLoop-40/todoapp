@@ -1,19 +1,20 @@
 import { useEffect } from "react"
-import { RecoilState, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import {  useRecoilState } from "recoil"
 import { ICategory, IToDo } from "../types/dataTypes"
 import { categoryState, toDoState } from "./atoms"
 import CreateCategory from "./CreateCategory"
 import CreateToDo from "./CreateToDo"
 import ToDo from "./ToDo"
 
+export function getStorageItems<T extends unknown>(key: string) {
+	const items = localStorage.getItem(key)
+	const oldList: T[] = !items ? [] : JSON.parse(items)
+	return oldList
+}
+
 function TodoList () {
 	const [toDos, setToDos] = useRecoilState(toDoState)
 	const [categories, setCategories] = useRecoilState(categoryState)
-	const getStorageItems = <T extends unknown>(key: string) => {
-		const items = localStorage.getItem(key)
-		const oldList: T[] = !items ? [] : JSON.parse(items)
-		return oldList
-	}
 			
 	useEffect(() => {
 		const makeFullList = <T extends {id: number}>(key:string, list: T[]) => {
@@ -21,13 +22,12 @@ function TodoList () {
 				!list.find((item) => item.id === oldItem.id)).concat(list)
 		}
 		const toDoList = makeFullList<IToDo>("toDos",toDos)
+		const oldCategories = toDoList.map((toDo) => toDo.category)
 		const categoryList = makeFullList<ICategory>("category", categories)
-		// console.log('저장된 투두스', toDoList)
-		// console.log('저장된 카테고리', categoryList)
-		if(toDos.length !== 0) {
-			localStorage.setItem("toDos", JSON.stringify(toDoList))
-			localStorage.setItem("categories", JSON.stringify(categoryList))
-		} 
+		console.log('저장된 투두스', toDoList)
+		console.log('저장된 카테고리', oldCategories)
+		localStorage.setItem("toDos", JSON.stringify(toDoList))
+		localStorage.setItem("categories", JSON.stringify(categoryList))
 	}, [toDos, categories])
 	
 	const loadToDos = () => {
