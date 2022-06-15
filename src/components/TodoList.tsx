@@ -6,53 +6,41 @@ import CreateCategory from "./CreateCategory"
 import CreateToDo from "./CreateToDo"
 import ToDo from "./ToDo"
 
-// function useStorage () {
-// 	const useGetStorage = <T extends unknown> (key: string, state: RecoilState<T[]>) => {
-// 		const items: string | null = localStorage.getItem(key)
-// 		const storedState: T[] =  items ? JSON.parse(items) : []
-// 		const setState = useSetRecoilState(state)
-// 		useEffect(() => {
-// 			return storedState.length === 0 
-// 			? undefined
-// 			: setState(storedState)
-// 		}, [])
-// 	}
-// 	const useSetStorage = <T extends unknown> (key: string, changedState: RecoilState<T[]>) => {
-// 		const [state, setState] = useRecoilValue(changedState)
-// 		useEffect(() => {
-// 			return !state 
-// 			? undefined
-// 			: localStorage.setItem(key, JSON.stringify(state))
-// 		}, [state])
-// 	}
-// 	return { useGetStorage, useSetStorage }
-// }
 function TodoList () {
 	const [toDos, setToDos] = useRecoilState(toDoState)
-	const makeToDoList = (toDos:IToDo[]) => {
-		const items = localStorage.getItem("toDos")
-		const toDoList: IToDo[] = !items ? [] : JSON.parse(items)
-		const filteredToDoList = toDoList.filter((oldToDo) => {
-			return !toDos.find((toDo) => toDo.id === oldToDo.id)
-		}) 
-		return filteredToDoList.concat(toDos)
-	}		
+	const [categories, setCategories] = useRecoilState(categoryState)
+	const getStorageItems = <T extends unknown>(key: string) => {
+		const items = localStorage.getItem(key)
+		const oldList: T[] = !items ? [] : JSON.parse(items)
+		return oldList
+	}
+			
 	useEffect(() => {
-		const toDoList = makeToDoList(toDos)
-		if(toDos.length !== 0) localStorage.setItem("toDos", JSON.stringify(toDoList)) 
-	}, [toDos])
+		const makeFullList = <T extends {id: number}>(key:string, list: T[]) => {
+			return getStorageItems<T>(key).filter((oldItem: T) => 
+				!list.find((item) => item.id === oldItem.id)).concat(list)
+		}
+		const toDoList = makeFullList<IToDo>("toDos",toDos)
+		const categoryList = makeFullList<ICategory>("category", categories)
+		// console.log('저장된 투두스', toDoList)
+		// console.log('저장된 카테고리', categoryList)
+		if(toDos.length !== 0) {
+			localStorage.setItem("toDos", JSON.stringify(toDoList))
+			localStorage.setItem("categories", JSON.stringify(categoryList))
+		} 
+	}, [toDos, categories])
 	
 	const loadToDos = () => {
-		const items = localStorage.getItem("toDos")
-		const toDos: IToDo[] = !items ? [] : JSON.parse(items)
-		localStorage.clear()
-		setToDos((oldToDos) => {
-			return [...toDos]
-		})		
+		const toDos = getStorageItems<IToDo>("toDos")
+		const categories = getStorageItems<ICategory>("categories")
+		setToDos(() => [...toDos])
+		setCategories(() => [...categories])		
 	}
 	const clearToDos = () => {
 		localStorage.clear()
 	}
+	// console.log('투두스', toDos)
+	// console.log('카테고리스', categories)
 	return (
 		<div>
 			<h1>Category</h1>
