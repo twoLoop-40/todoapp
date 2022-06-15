@@ -31,8 +31,8 @@ function TodoList () {
 		)
 		localStorage.setItem("toDos", JSON.stringify(toDoList))
 		localStorage.setItem("categories", JSON.stringify(updatedList))
-		console.log('저장된 투두스', toDoList)
-		console.log('저장된 카테고리', getStorageItems<ICategory>("categories"))
+		// console.log('저장된 투두스', toDoList)
+		// console.log('저장된 카테고리', getStorageItems<ICategory>("categories"))
 	}, [toDos, categories])
 	useEffect(() => {
 		setCategories(() => getStorageItems<ICategory>('categories'))

@@ -3,15 +3,15 @@ import { ICategory, IToDo } from "../types/dataTypes";
 
 const basicCategories: ICategory[] = [
 		{
-			id: 0,
+			id: Date.now(),
 			text: "TO_DO"
 		},
 		{
-			id: 1,
+			id: Date.now() + 1,
 			text: "DOING"
 		},
 		{
-			id: 2,
+			id: Date.now() + 2,
 			text: "DONE"
 		}
 	]

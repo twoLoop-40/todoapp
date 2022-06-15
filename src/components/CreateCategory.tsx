@@ -1,18 +1,18 @@
 import { useForm } from "react-hook-form"
-import { useRecoilState } from "recoil"
+import { useRecoilState, useSetRecoilState } from "recoil"
 import { CategoryForm, ICategory } from "../types/dataTypes"
-import { ReactSelectEvent } from "../types/reactEvent"
-import { categoryState, currentCategory } from "./atoms"
+import { ReactMouseEvent, ReactSelectEvent } from "../types/reactEvent"
+import { categoryState, currentCategory, toDoState } from "./atoms"
 
 function CreateCategory () {
 	const { register, handleSubmit, setValue } = useForm<CategoryForm>()
 	const [selectedCategory, setSelectedCategory] = useRecoilState(currentCategory)
 	const [categories, setCategories] = useRecoilState(categoryState)
+	const setToDos = useSetRecoilState(toDoState)
 	
 	const handleValid = ({ category }: CategoryForm) => {
 		setCategories((oldCateries) => {
-			const length = oldCateries.length
-			const newCategory = { text: category, id: length }
+			const newCategory = { text: category, id: Date.now() }
 			return [...oldCateries, newCategory]
 		})
 		setValue("category", "")
@@ -27,6 +27,23 @@ function CreateCategory () {
 		})
 	}
 	// console.log("카테고리", categories)
+	const deleteCategory = (event: ReactMouseEvent) => {
+		event.preventDefault()
+		setToDos((toDos) => 
+			toDos.filter((toDo) => toDo.category.id !== selectedCategory.id)
+		)
+		setCategories((currentCategories) => {
+			const rest = currentCategories.filter((category) => 
+				category.id !== selectedCategory.id)
+			return rest
+		})
+		setSelectedCategory(() => categories.length > 0 ? categories[0] : {id : Date.now(), text: ""})
+			
+				
+	}
+	
+	console.log(categories)
+	console.log(selectedCategory)
 	return (
 		<div>
 			<form onSubmit={handleSubmit(handleValid)}>
@@ -36,10 +53,10 @@ function CreateCategory () {
 				<button>Add</button>
 			</form>
 			<form>
-				<select value={selectedCategory.id} onInput={onInput}>
+				<select value={selectedCategory ? selectedCategory.id : undefined} onInput={onInput}>
 					{makeCategoryOptions(categories)}
 				</select>
-				<button>Delete</button>
+				<button onClick={deleteCategory}>Delete</button>
 			</form>
 		</div>	
 	)
