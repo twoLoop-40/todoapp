@@ -37,13 +37,11 @@ function CreateCategory () {
 				category.id !== selectedCategory.id)
 			return rest
 		})
-		setSelectedCategory(() => categories.length > 0 ? categories[0] : {id : Date.now(), text: ""})
-			
-				
+		setSelectedCategory(() => categories.length > 0 ? categories.filter(v => v)[0] : {id: Date.now(), text: ""})
+						
 	}
 	
-	console.log(categories)
-	console.log(selectedCategory)
+	
 	return (
 		<div>
 			<form onSubmit={handleSubmit(handleValid)}>
@@ -56,7 +54,7 @@ function CreateCategory () {
 				<select value={selectedCategory ? selectedCategory.id : undefined} onInput={onInput}>
 					{makeCategoryOptions(categories)}
 				</select>
-				<button onClick={deleteCategory}>Delete</button>
+				<button onClick={deleteCategory}>Double click Delete</button>
 			</form>
 		</div>	
 	)
